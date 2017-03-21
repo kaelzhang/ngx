@@ -14,18 +14,26 @@
 
 # ngx
 
-<!-- description -->
+The Data-driven nginx configuration manager, featured:
+
+- Resolved path calculation for `include`, `root`, and other directives.
+- Nginx-style template engine and building system to reuse a template with several sets of data.
 
 ## Install
 
 ```sh
-$ npm install ngx --save
+$ npm install -g ngx
 ```
 
 ## Usage
 
-```js
-const ngx = require('ngx')
+```sh
+# create scaffold
+ngx init
+
+NGX_ENV=production ngx start
+# or
+ngx start --env production
 ```
 
 ## License

@@ -1,5 +1,6 @@
 # babel dist
 /lib
+/test/nginx
 
 # Numerous always-ignore extensions
 *.bak
