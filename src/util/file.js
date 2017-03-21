@@ -1,7 +1,8 @@
 module.exports = {
   readYaml,
   readFile,
-  decorate
+  decorate,
+  handleSemicolon
 }
 
 
@@ -51,4 +52,22 @@ function readFile (filepath) {
 const REGEX_EXT = /\.[a-z0-9]+(?:$|\?)/
 function decorate (basename, hash) {
   return basename.replace(REGEX_EXT, ext => '-' + hash + ext)
+}
+
+
+const SEMICOLON = ';'
+function handleSemicolon (fn) {
+  return async p => {
+    const lastIndex = p.lastIndexOf(SEMICOLON)
+    const has = lastIndex = p.length - 1
+
+    if (has) {
+      p = p.substr(0, lastIndex)
+    }
+
+    const result = await fn(p)
+    return has
+      ? result + SEMICOLON
+      : result
+  }
 }
