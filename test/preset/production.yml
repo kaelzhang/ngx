@@ -1,0 +1,27 @@
+upstream:
+  app:
+    server:
+      # The server list
+      - 127.0.0.1:8080
+      - 127.0.0.1:8081 backup
+    server_options:
+      weight: 5
+      max_fails: 3
+      fail_timeout: 60s
+
+  static:
+    server:
+      # The server list
+      - 127.0.0.1:8082
+
+server:
+  -
+    # # If no port defined,
+    # # it will listen 80 and 443 simultaneously.
+    # port: 80
+    server_name: apis.google.com
+
+    # default value as:
+    include: route/apis.google.com.conf
+    data:
+      upstream: app
