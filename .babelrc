@@ -9,5 +9,10 @@
     "syntax-trailing-function-commas",
     "transform-inline-environment-variables",
     "transform-es2015-modules-commonjs"
-  ]
+  ],
+
+  "parserOpts": {
+    // Allow returns in the module
+    "allowReturnOutsideFunction": true
+  }
 }
