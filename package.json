@@ -61,6 +61,7 @@
   "dependencies": {
     "code-stringify": "^1.2.3",
     "commander": "^2.9.0",
+    "cross-spawn": "^5.1.0",
     "debug": "^2.6.3",
     "fs-promise": "^2.0.0",
     "globby": "^6.1.0",

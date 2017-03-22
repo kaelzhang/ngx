@@ -4,7 +4,7 @@ const program = require('commander')
 
 program
 .version(require('../../package.json').version)
-.usage('<cmd>')
+.usage('<cmd> [options]')
 .command('test', 'test nginx config')
 .command('reload', 'reload nginx server')
 .command('start', 'start nginx server')

@@ -59,7 +59,7 @@ const SEMICOLON = ';'
 function handleSemicolon (fn) {
   return async p => {
     const lastIndex = p.lastIndexOf(SEMICOLON)
-    const has = lastIndex = p.length - 1
+    const has = lastIndex === p.length - 1
 
     if (has) {
       p = p.substr(0, lastIndex)

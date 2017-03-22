@@ -117,7 +117,7 @@ class Compiler {
       file,
       dest: this._dest,
       src: this._src,
-      options, this._options
+      options: this._options
     }).transform()
 
     return `include ${compiledDest}`
@@ -149,3 +149,5 @@ class Compiler {
     }
   }
 }
+
+module.exports = Compiler
