@@ -1,3 +1,23 @@
+const spawn = require('cross-spawn')
+const debug = require('debug')('ngx')
+
+module.exports = (command, args) => {
+  debug('spawn %s %s', command, args.join(' '))
+
+  const p = spawn(command, args, {
+    stdio: 'inherit'
+  })
+
+  return new Promise((resolve, reject) => {
+    p.on('close', (code) => {
+      if (code === 0) {
+        return resolve()
+      }
+
+      reject(new Error(`command exit with code ${code}`))
+    })
+  })
+}
 
 
 const typo = require('typo')()
@@ -31,33 +51,4 @@ function fail (template, data = {}) {
 
   log(template, true, data)
   process.exit(1)
-}
-
-
-function env (env = 'production') {
-  process.env.GAIA_ENV = env
-}
-
-
-const program = require('commander')
-
-program
-// If we use sudo, we could not specify env by
-//  GAIA_ENV=production gaia reload
-.option('-e, --env [env]', 'specify environment')
-
-const _parse = program.parse
-program.parse = (argv) => {
-  const ret = _parse.call(program, argv)
-  env(program.env)
-  return ret
-}
-
-function commander () {
-  return program
-}
-
-
-function parse () {
-  return commander().parse(process.argv)
 }

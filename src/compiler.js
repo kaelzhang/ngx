@@ -2,6 +2,8 @@ const typo = require('typo')
 const path = require('path')
 const crypto = require('crypto')
 const fs = require('fs-promise')
+const isGlob = require('is-glob')
+const globby = require('globby')
 const {
   readFile,
   decorate,
@@ -109,6 +111,14 @@ class Compiler {
       return `include ${destpath}`
     }
 
+    if (!isGlob) {
+      return this._includeOne(file)
+    }
+
+    return this._includeMany(file)
+  }
+
+  async _includeOne (file) {
     // Or we should use the new compiled file
     const {
       destpath: compiledDest
@@ -121,6 +131,17 @@ class Compiler {
     }).transform()
 
     return `include ${compiledDest}`
+  }
+
+  async _includeMany (file) {
+    const files = await globby(file, {
+      cwd: this._src
+    })
+
+    return Promise.all(files.map(file => this._includeOne(file)))
+    .then(results => {
+      return results.join(';')
+    })
   }
 
   async _user (user) {

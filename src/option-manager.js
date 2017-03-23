@@ -12,6 +12,8 @@ class OptionManager {
   }) {
     this._cwd = path.resolve(cwd)
     this._cliOptions = cliOptions
+
+    this._env = cliOptions.env || process.env.NGX_ENV
   }
 
   async _readNgxrc () {
@@ -80,7 +82,34 @@ class OptionManager {
 
     const src = cli.src || options.src
     if (!src) {
-
+      return Promise.reject(new Error('src is not defined'))
     }
+
+    const dest = cli.dest || options.src
+    if (!dest) {
+      return Promise.reject(new Error('dest is not defined'))
+    }
+
+    const config = this._config()
+    if (!config) {
+      return Promise.reject(new Error('config is not defined'))
+    }
+
+    return {
+      src: path.resolve(src),
+      dest: path.resolve(dest),
+      config
+    }
+  }
+
+  _config (options) {
+    let config = options.config
+    if (Object(config) === config) {
+      config = config[this._env]
+    } else {
+      config = this._cliOptions.config
+    }
+
+    return config
   }
 }
