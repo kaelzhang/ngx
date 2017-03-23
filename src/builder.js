@@ -20,18 +20,33 @@ async function build ({
   const entryContent = await readFile(entry)
   const relativeEntry = path.relative(src, entry)
 
-  const subCompiler = new Compiler({
-    src,
-    dest,
-    data: config,
-    file: relativeEntry
-  })
+  const servers = []
+  const includeServer = async server => {
+    const data = {
+      ...config
+    }
 
-  const data = {
-    ...config
+    Object.assign(data, server.data)
+
+    const compiler = new Compiler({
+      src,
+      dest,
+      data,
+      file: relativeEntry
+    })
+
+    const result = await server.toString(compiler.include)
+    servers.push(result)
   }
 
-  data.servers = await config.servers.toString(subCompiler.include)
+  await Promise.all(
+    config.servers.map(includeServer)
+  )
+
+  const data = {
+    ...config,
+    servers
+  }
 
   await new Compiler({
     src,

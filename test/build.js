@@ -12,7 +12,7 @@ function fixture (p) {
 
 test('builder', async t => {
   const src = fixture('src')
-  const dest = fixture('dest')
+  const dest = fixture('nginx')
   const entry = fixture('src/nginx.conf')
 
   const configFile = fixture('preset/production.yml')

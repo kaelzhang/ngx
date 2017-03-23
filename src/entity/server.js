@@ -6,14 +6,18 @@ class Servers {
     .map(server => new Server(server))
   }
 
-  async toString (include) {
-    return Promise.all(
-      this._servers.map(server => server.toString(include))
-    )
-    .then(contents => {
-      return contents.join('\n\n')
-    })
+  map (fn) {
+    return this._servers.map(fn)
   }
+
+  // async toString (include) {
+  //   return Promise.all(
+  //     this._servers.map(server => server.toString(include))
+  //   )
+  //   .then(contents => {
+  //     return contents.join('\n\n')
+  //   })
+  // }
 }
 
 
@@ -21,7 +25,8 @@ class Server {
   constructor ({
     port = [80, 443],
     server_name,
-    include
+    include,
+    data = {}
   }) {
 
     this._port = make_array(port).map(Number)
@@ -32,6 +37,11 @@ class Server {
     }
 
     this._include = include
+    this._data = data
+  }
+
+  get data () {
+    return this._data
   }
 
   // server {

@@ -62,7 +62,7 @@ function readFile (filepath) {
 
 const REGEX_EXT = /\.[a-z0-9]+(?:$|\?)/
 function decorate (basename, hash) {
-  return basename.replace(REGEX_EXT, ext => '-' + hash + ext)
+  return basename.replace(REGEX_EXT, ext => '-' + hash.slice(0, 10) + ext)
 }
 
 
@@ -78,7 +78,9 @@ function handleSemicolon (fn) {
 
     const result = await fn(p)
     return has
-      ? result + SEMICOLON
+      ? result
+        ? result + SEMICOLON
+        : ''
       : result
   }
 }

@@ -13,15 +13,17 @@ const {
 
 class Compiler {
   constructor ({
-    data,
+    data = {},
     file,
     dest,
-    src
+    src,
+    isEntry
   }) {
 
     this._data = data
     this._src = src
     this._dest = dest
+    this._isEntry = isEntry
 
     this._file = file
     this._filepath = path.join(src, file)
@@ -166,15 +168,18 @@ class Compiler {
   async transform (content) {
     content = content || await readFile(this._filepath)
     const compiled = await this._typo.template(
-      content.toString(), {}, {
+      content.toString(), this._data, {
         value_not_defined: 'throw',
         directive_value_not_defined: 'print'
       })
 
     const hash = crypto.createHash('sha256')
-      .update(compiled).digest()
+      .update(compiled).digest('hex')
 
-    const destpath = decorate(this._destpath, hash)
+    const destpath = this._isEntry
+      ? this._destpath
+      : decorate(this._destpath, hash)
+
     await fs.outputFile(destpath, compiled)
 
     return {
