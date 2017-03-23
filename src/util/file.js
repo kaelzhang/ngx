@@ -2,13 +2,17 @@ module.exports = {
   readYaml,
   readFile,
   decorate,
-  handleSemicolon
+  handleSemicolon,
+  readUpstreams,
+  savepstreams,
+  removeSavedUpstreams
 }
 
 
 const yaml = require('js-yaml')
 const fs = require('fs-promise')
 const path = require('path')
+const code = require('code-stringify')
 const {
   Upstreams
 } = require('./entity/upstream')
@@ -25,10 +29,17 @@ function readYaml (filepath) {
   .then(parseYaml)
   .then(config => {
     config.upstreams = new Upstreams(config.upstream)
-    config.servers = new Servers(config.server, {base})
+    config.servers = new Servers(cleanServers(config.server), {base})
 
     return config
   })
+}
+
+
+// TODO
+function cleanServers (servers, filepath) {
+  // resolve server.include
+  return servers
 }
 
 
@@ -70,4 +81,52 @@ function handleSemicolon (fn) {
       ? result + SEMICOLON
       : result
   }
+}
+
+
+function readSavedUpstreams (cwd) {
+  const upstreams = require(upstreamFile(cwd))
+
+  Object.defineProperty(upstreams, 'forEach', {
+    value: (fn) => {
+      Object.keys(upstreams).forEach((name) => {
+        fn(name, upstreams[name])
+      })
+    },
+    enumerable: false
+  })
+
+  return upstreams
+}
+
+
+function upstreamFile (cwd) {
+  return path.join(cwd, '.ngx', 'upstream.js')
+}
+
+
+function readUpstreams (cwd, yaml, useCache) {
+  if (useCache) {
+    return readSavedUpstreams(cwd)
+  }
+
+  return readYaml(yaml).then(config => {
+    return config.upstreams
+  })
+}
+
+
+function saveUpstreams (cwd, upstreams) {
+  const us = {}
+  upstreams.forEach((name, servers) => {
+    us[name] = servers
+  })
+
+  return fs.outputFile(upstreamFile(cwd),
+    `module.exports = ${code(us, null, 2)}`)
+}
+
+
+function removeSavedUpstreams (cwd) {
+  return fs.unlink(upstreamFile(cwd))
 }

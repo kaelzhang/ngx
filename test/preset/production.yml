@@ -25,3 +25,12 @@ server:
     include: route/apis.google.com.conf
     data:
       upstream: app
+
+  -
+    server_name: static.google.com
+    include: route/apis.google.com.conf
+    data:
+      upstream: static
+
+body_size: 300m
+sudo: false

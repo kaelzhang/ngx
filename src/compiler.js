@@ -16,8 +16,7 @@ class Compiler {
     data,
     file,
     dest,
-    src,
-    options
+    src
   }) {
 
     this._data = data
@@ -31,20 +30,15 @@ class Compiler {
     this._srcbase = path.dirname(this._filepath)
     this._destbase = path.dirname(this._destpath)
 
-    this._options = options
-
     this._createCompiler()
   }
 
   _createCompiler () {
-    const [
-      root,
-      include,
-      pid,
-      error_log,
-      user
-    ] = [
+    const directive = {}
 
+    const methods = 'root include pid error_log user'.split(' ')
+
+    const impls = [
       this._directive('root'),
       p => this._include(p),
       this._ensure('pid'),
@@ -52,6 +46,11 @@ class Compiler {
       p => this._user(p),
 
     ].map(handleSemicolon)
+
+    methods
+    .forEach((name, i) => {
+      this[name] = directive[name] = methods[i]
+    })
 
     this._typo = typo()
     .use({
@@ -119,15 +118,34 @@ class Compiler {
   }
 
   async _includeOne (file) {
+    const data = {
+      ...this._data
+    }
+
+    Object.defineProperties(data, {
+      upstreams: {
+        get () {
+          throw new Error(
+            `{{upstreams}} is not allowed in non-entry files, "${file}"`)
+        }
+      },
+
+      servers: {
+        get () {
+          throw new Error(
+            `{{servers}} is not allowed in non-entry files, "${file}"`)
+        }
+      }
+    })
+
     // Or we should use the new compiled file
     const {
       destpath: compiledDest
     } = await new Compiler({
-      data: this._data,
+      data,
       file,
       dest: this._dest,
-      src: this._src,
-      options: this._options
+      src: this._src
     }).transform()
 
     return `include ${compiledDest}`
@@ -146,13 +164,13 @@ class Compiler {
 
   async _user (user) {
     // Only show in sudo
-    return this._options.sudo === false
+    return this._data.sudo === false
       ? ''
       : `user ${user}`
   }
 
-  async transform () {
-    const content = await readFile(this._filepath)
+  async transform (content) {
+    content = content || await readFile(this._filepath)
     const compiled = await this._typo.template(
       content.toString(), {}, {
         value_not_defined: 'throw',

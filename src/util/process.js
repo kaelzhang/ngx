@@ -1,7 +1,14 @@
-const spawn = require('cross-spawn')
+module.exports = {
+  log,
+  template,
+  fail,
+  spawn
+}
+
+const _spawn = require('cross-spawn')
 const debug = require('debug')('ngx')
 
-module.exports = (command, args) => {
+function spawn (command, args) {
   debug('spawn %s %s', command, args.join(' '))
 
   const p = spawn(command, args, {
@@ -45,7 +52,7 @@ function template (t = '', error, data = {}) {
 
 function fail (template, data = {}) {
   if (template instanceof Error) {
-    console.error(template.stack)
+    debug('fail with error: %s', template.stack)
     return process.exit(1)
   }
 

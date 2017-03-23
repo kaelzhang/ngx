@@ -4,5 +4,6 @@
     "production": "preset/production.yml"
   },
   "src": "src",
-  "dest": "nginx"
+  "dest": "nginx",
+  "entry": "src/nginx.conf"
 }
