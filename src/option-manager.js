@@ -115,13 +115,13 @@ class OptionManager {
   }
 
   _configFile (config) {
-    const configFile = this._options.config
+    let configFile = this._options.config
 
     if (configFile) {
       return configFile
     }
 
-    let configFile = config.configFile
+    configFile = config.configFile
 
     if (Object(configFile) === configFile) {
       configFile = configFile[this._env]

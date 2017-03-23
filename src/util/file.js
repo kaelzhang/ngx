@@ -4,7 +4,7 @@ module.exports = {
   decorate,
   handleSemicolon,
   readUpstreams,
-  savepstreams,
+  saveUpstreams,
   removeSavedUpstreams
 }
 
@@ -15,11 +15,11 @@ const path = require('path')
 const code = require('code-stringify')
 const {
   Upstreams
-} = require('./entity/upstream')
+} = require('../entity/upstream')
 
 const {
   Servers
-} = require('./entity/server')
+} = require('../entity/server')
 
 
 function readYaml (filepath) {

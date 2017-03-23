@@ -3,7 +3,7 @@ const make_array = require('make-array')
 class Servers {
   constructor (servers) {
     this._servers = make_array(servers)
-    .map(server => new Server(server)
+    .map(server => new Server(server))
   }
 
   async toString (include) {
@@ -48,7 +48,7 @@ class Server {
   //   include route/api.thebeastshop.com.conf;
   // }
 
-  async _serverToString (port) {
+  async _serverToString (port, include) {
     const content = await include(this._routeString())
 
     if (port === 443) {

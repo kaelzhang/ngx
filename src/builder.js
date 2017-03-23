@@ -1,3 +1,5 @@
+module.exports = build
+
 const {
   readFile
 } = require('./util/file')
@@ -29,7 +31,6 @@ async function build ({
     ...config
   }
 
-  //
   data.servers = await config.servers.toString(subCompiler.include)
 
   await new Compiler({

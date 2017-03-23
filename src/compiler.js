@@ -8,7 +8,7 @@ const {
   readFile,
   decorate,
   handleSemicolon
-} = require('../util/file')
+} = require('./util/file')
 
 
 class Compiler {
@@ -49,23 +49,17 @@ class Compiler {
 
     methods
     .forEach((name, i) => {
-      this[name] = directive[name] = methods[i]
+      this[name] = directive[name] = impls[i]
     })
 
     this._typo = typo()
-    .use({
-      root,
-      include,
-      pid,
-      error_log,
-      user
-    })
+    .use(directive)
   }
 
   _resolve (p) {
     const abs = path.join(this._srcbase, p)
     const relative = path.relative(this._src, abs)
-    const inside = relative.indexf('..') !== 0
+    const inside = relative.indexOf('..') !== 0
 
     return {
       inside,
