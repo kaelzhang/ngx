@@ -1,15 +1,16 @@
 const json = require('json5')
 const path = require('path')
 const {
-  read
+  readFile
 } = require('./util/file')
 
 
-class OptionManager {
+module.exports = class OptionManager {
   constructor ({
     cwd,
 
-    // cli options
+    // cli options, including
+    // - env `String` NGX_ENV
     options
   }) {
     this._cwd = path.resolve(cwd)
@@ -20,7 +21,7 @@ class OptionManager {
 
   async _readNgxrc () {
     const rc = path.join(this._cwd, '.ngxrc')
-    const content = await read(rc)
+    const content = await readFile(rc)
     return {
       value: json.parse(content),
       filepath: rc,
@@ -79,7 +80,9 @@ class OptionManager {
   }
 
   async get () {
-    const config = await this._read()
+    const {
+      value: config
+    } = await this._read()
     const cli = this._options
 
     const src = cli.src || config.src
@@ -127,6 +130,6 @@ class OptionManager {
       configFile = configFile[this._env]
     }
 
-    return configFile
+    return path.resolve(this._cwd, configFile)
   }
 }

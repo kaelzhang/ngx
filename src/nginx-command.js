@@ -7,8 +7,8 @@ module.exports = {
 
 
 // @param {path} dest
-function nginx (dest, rest = []) {
-  return ['nginx', ['-p', dest, '-c', `${dest}/nginx.conf`, ...rest]]
+function nginx (dest, destEntry, rest = []) {
+  return ['nginx', ['-p', dest, '-c', destEntry, ...rest]]
 }
 
 function reload (dest) {

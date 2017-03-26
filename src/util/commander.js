@@ -1,29 +1,23 @@
-
-
-function env (env = 'production') {
-  process.env.GAIA_ENV = env
-}
-
-
 const program = require('commander')
+const path = require('path')
 
 program
 // If we use sudo, we could not specify env by
-//  GAIA_ENV=production gaia reload
+//  NGX_ENV=production ngx reload
 .option('-e, --env [env]', 'specify environment')
-
-const _parse = program.parse
-program.parse = (argv) => {
-  const ret = _parse.call(program, argv)
-  env(program.env)
-  return ret
-}
-
-function commander () {
-  return program
-}
-
+.option('--cwd [cwd]', 'set current working directory')
 
 function parse () {
-  return commander().parse(process.argv)
+  program.parse(process.argv)
+
+  program.cwd = program.cwd
+    ? path.resolve(program.cwd)
+    : process.cwd()
+
+  program.env = program.env || 'production'
+}
+
+module.exports = {
+  program,
+  parse
 }

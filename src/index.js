@@ -1,81 +1,77 @@
-// module.exports = {
-//   build,
+const build = require('./builder')
 
-// }
+const save = opts => saveUpstreams(opts.dest, opts.data.upstreams)
+const remove = opts => removeSavedUpstreams(opts.dest)
 
-// const {
-//   readYaml,
-// } = require('./util/file')
+const test = c('test', '{{cyan test}} configurations ...')
+const reload = c('reload', '{{cyan reload}} nginx ...', save)
+const stop = c('stop', '{{cyan stop}} nginx ...', remove)
+const start = c('start', '{{cyan start}} nginx ...', save)
 
-// const _build = require('./lib/build')
-// const path = require('path')
-// const command = require('./lib/command')
-// const spawn = require('./lib/spawn')
-// const fs = require('fs-promise')
-
-// const _test = c('test', '{{cyan test}} configurations ...')
-// const _reload = c('reload', '{{cyan reload}} nginx ...')
-// const _stop = c('stop', '{{cyan stop}} nginx ...')
-// const _start = c('start', '{{cyan start}} nginx ...')
-
-
-// // function options ({
-// //   cwd,
-// //   options
-// // }) {
-
-// // }
+module.exports = {
+  parseOptions,
+  build,
+  test,
+  reload,
+  start,
+  stop
+}
 
 
-// async function build ({
-//   src,
-//   dest,
-//   configFile
-// }) {
-
-//   const config = await readYaml(configFile)
-
-// }
-
-
-
-// const build = exports.build = async config => {
-//   config = config || await read()
-
-//   log('{{cyan build}} nginx configurations ...')
-//   return _build(src, dest, config)
-//   .then(() => {
-//     return config
-//   })
-// }
+const path = require('path')
+const command = require('./nginx-command')
+const OptionManager = require('./option-manager')
+const {
+  readYaml,
+  saveUpstreams,
+  removeSavedUpstreams
+} = require('./util/file')
+const {
+  spawn,
+  log
+} = require('./util/process')
 
 
-// function c (type, message) {
-//   return config => {
-//     log(message)
-//     return spawn(...command[type](dest))
-//     .then(() => config)
-//   }
-// }
+async function parseOptions ({
+  cwd, options
+}) {
+
+  const {
+    src,
+    dest,
+    configFile,
+    entry
+  } = await new OptionManager({
+    cwd,
+    options
+  }).get()
+
+  const data = await readYaml(configFile)
+
+  return {
+    src,
+    dest,
+    data,
+    entry
+  }
+}
 
 
+function c (type, message, after) {
+  return async opts => {
+    log(message)
 
+    const {
+      dest,
+      destEntry
+    } = opts
 
-// if (require.main !== module) {
-//   return
-// }
+    await spawn(...command[type](dest, destEntry))
 
-// const {
-//   parse,
-//   fail
-// } = require('./lib/utils')
+    if (after) {
+      await after(opts)
+    }
 
-// parse()
-
-// build()
-// .then(test)
-// .then(start)
-// .then(config => {
-//   return save_upstreams(config.upstreams)
-// })
-// .catch(fail)
+    return opts
+  }
+}

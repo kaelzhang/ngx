@@ -11,7 +11,7 @@ const {
 } = require('./util/file')
 
 
-class Compiler {
+module.exports = class Compiler {
   constructor ({
     data = {},
     file,
@@ -187,5 +187,3 @@ class Compiler {
     }
   }
 }
-
-module.exports = Compiler

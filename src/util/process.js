@@ -11,7 +11,7 @@ const debug = require('debug')('ngx')
 function spawn (command, args) {
   debug('spawn %s %s', command, args.join(' '))
 
-  const p = spawn(command, args, {
+  const p = _spawn(command, args, {
     stdio: 'inherit'
   })
 
@@ -52,7 +52,7 @@ function template (t = '', error, data = {}) {
 
 function fail (template, data = {}) {
   if (template instanceof Error) {
-    debug('fail with error: %s', template.stack)
+    log(template.stack, true)
     return process.exit(1)
   }
 

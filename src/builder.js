@@ -12,7 +12,7 @@ async function build ({
   // @param {path} dest Absolute url
   dest,
   // @param {Object} the content of config.yaml
-  config,
+  data: config,
   // @param {path} entry the entry file of nginx, relative to src
   entry
 }) {
@@ -48,12 +48,20 @@ async function build ({
     servers
   }
 
-  await new Compiler({
+  const {
+    destpath
+  } = await new Compiler({
     src,
     dest,
     data,
-    file: relativeEntry
+    file: relativeEntry,
+    isEntry: true
   }).transform()
 
-  return data
+  return {
+    src,
+    dest,
+    data,
+    destEntry: destpath
+  }
 }
