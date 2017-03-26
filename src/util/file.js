@@ -3,7 +3,7 @@ module.exports = {
   readFile,
   decorate,
   handleSemicolon,
-  readUpstreams,
+  readSavedUpstreams,
   saveUpstreams,
   removeSavedUpstreams
 }
@@ -86,7 +86,7 @@ function handleSemicolon (fn) {
 }
 
 
-function readSavedUpstreams (cwd) {
+async function readSavedUpstreams (cwd) {
   const upstreams = require(upstreamFile(cwd))
 
   Object.defineProperty(upstreams, 'forEach', {
@@ -104,17 +104,6 @@ function readSavedUpstreams (cwd) {
 
 function upstreamFile (cwd) {
   return path.join(cwd, '.ngx', 'upstream.js')
-}
-
-
-function readUpstreams (cwd, yaml, useCache) {
-  if (useCache) {
-    return readSavedUpstreams(cwd)
-  }
-
-  return readYaml(yaml).then(config => {
-    return config.upstreams
-  })
 }
 
 

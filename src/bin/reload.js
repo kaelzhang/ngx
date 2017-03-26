@@ -24,11 +24,3 @@ parseOptions({cwd, options: {env}})
 .then(build)
 .then(reload)
 .catch(fail)
-
-// build()
-// .then(test)
-// .then(reload)
-// .then(config => {
-//   return save_upstreams(config.upstreams)
-// })
-// .catch(fail)

@@ -90,7 +90,7 @@ module.exports = class OptionManager {
       return Promise.reject(new Error('src is not defined'))
     }
 
-    const dest = cli.dest || config.src
+    const dest = cli.dest || config.dest
     if (!dest) {
       return Promise.reject(new Error('dest is not defined'))
     }
@@ -105,11 +105,18 @@ module.exports = class OptionManager {
       return Promise.reject(new Error('entry is not defined'))
     }
 
+    const relativeEntry = path.relative(src, entry)
+
     return {
       src: this._resolve(src),
       dest: this._resolve(dest),
       configFile,
-      entry: this._resolve(entry)
+
+      // TODO,
+      // - nginx.conf -> relative to src
+      // - ./nginx.conf -> relative to configFile
+      // - /path/to/nginx.conf -> path.relative
+      entry: relativeEntry
     }
   }
 

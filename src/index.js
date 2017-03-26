@@ -52,6 +52,7 @@ async function parseOptions ({
     src,
     dest,
     data,
+    configFile,
     entry
   }
 }
@@ -63,10 +64,10 @@ function c (type, message, after) {
 
     const {
       dest,
-      destEntry
+      entry
     } = opts
 
-    await spawn(...command[type](dest, destEntry))
+    await spawn(...command[type](dest, entry))
 
     if (after) {
       await after(opts)

@@ -5,6 +5,7 @@ const {
 } = require('./util/file')
 const Compiler = require('./compiler')
 const path = require('path')
+const fs = require('fs-promise')
 
 async function build ({
   // @param {path} src Absolute url
@@ -17,8 +18,8 @@ async function build ({
   entry
 }) {
 
-  const entryContent = await readFile(entry)
-  const relativeEntry = path.relative(src, entry)
+  const absEntry = path.join(src, entry)
+  const entryContent = await readFile(absEntry)
 
   const servers = []
   const includeServer = async server => {
@@ -32,7 +33,7 @@ async function build ({
       src,
       dest,
       data,
-      file: relativeEntry
+      file: entry
     })
 
     const result = await server.toString(compiler.include)
@@ -45,16 +46,17 @@ async function build ({
 
   const data = {
     ...config,
-    servers
+    servers: servers.join('\n\n')
   }
 
-  const {
-    destpath
-  } = await new Compiler({
+  // Ensure dir "logs" which is required by nginx by default
+  await fs.ensureDir(path.join(dest, 'logs'))
+
+  await new Compiler({
     src,
     dest,
     data,
-    file: relativeEntry,
+    file: entry,
     isEntry: true
   }).transform()
 
@@ -62,6 +64,6 @@ async function build ({
     src,
     dest,
     data,
-    destEntry: destpath
+    entry
   }
 }

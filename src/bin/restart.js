@@ -1,30 +1,28 @@
 #!/usr/bin/env node
 
 const {
-  parse,
+  program,
+  parse
+} = require('../util/commander')
+
+const {
   fail
-} = require('./lib/utils')
+} = require('../util/process')
 
 const {
-  remove_upstreams,
-  save_upstreams
-} = require('./lib/config')
-
-const {
+  parseOptions,
+  start,
   stop,
-  build,
-  test,
-  start
-} = require('./start')
+  build
+} = require('..')
 
 parse()
 
-stop()
-.then(remove_upstreams)
+const cwd = program.cwd
+const env = program.env
+
+parseOptions({cwd, options: {env}})
+.then(stop)
 .then(build)
-.then(test)
 .then(start)
-.then(config => {
-  return save_upstreams(config.upstreams)
-})
 .catch(fail)

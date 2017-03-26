@@ -9,7 +9,8 @@
     "ngx-restart": "lib/bin/restart.js",
     "ngx-stop": "lib/bin/stop.js",
     "ngx-test": "lib/bin/test.js",
-    "ngx-list": "lib/bin/list.js"
+    "ngx-list": "lib/bin/list.js",
+    "ngx-down": "lib/bin/down.js"
   },
   "scripts": {
     "build": "babel src --out-dir lib",

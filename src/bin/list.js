@@ -1,30 +1,48 @@
 #!/usr/bin/env node
 
 const {
-  parse,
-  fail,
-  log
-} = require('./lib/utils')
-const debug = require('debug')('gaia')
-
-const program = parse()
+  program,
+  parse
+} = require('../util/commander')
 
 const {
-  read_upstreams
-} = require('./lib/config')
+  fail,
+  log
+} = require('../util/process')
 
-read_upstreams(true)
-.catch(err => {
-  log('{{white.bgYellow warn}} fails to read runtime upstreams, fallback to config...')
-  log('{{white.bgYellow warn}} which means maybe your nginx server is not started.')
-  return read_upstreams()
+const {
+  readSavedUpstreams,
+  readYaml
+} = require('../util/file')
+
+const {
+  parseOptions
+} = require('..')
+
+parse()
+
+const cwd = program.cwd
+const env = program.env
+
+parseOptions({cwd, options: {env}})
+.then(({configFile}) => {
+  return readSavedUpstreams(cwd)
+  .catch(err => {
+    log('{{white.bgYellow warn}} fails to read runtime upstreams, fallback to config...')
+    log('{{white.bgYellow warn}} which means maybe your nginx server is not started.')
+    return readUpstreams(configFile)
+  })
 })
 .then(upstreams => {
-
   program.args.length
     ? list(upstreams, program.args[0])
     : list_all(upstreams)
 })
+
+
+function readUpstreams (yaml) {
+  return readYaml(yaml).then(config => config.upstreams)
+}
 
 
 function list_all (upstreams) {
