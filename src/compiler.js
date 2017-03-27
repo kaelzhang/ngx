@@ -179,8 +179,8 @@ module.exports = class Compiler {
       : `user ${user}`
   }
 
-  async transform (content) {
-    content = content || await readFile(this._filepath)
+  async transform () {
+    const content = await readFile(this._filepath)
 
     const compiled = await this._typo.template(
       content.toString(), this._data, {
@@ -200,5 +200,9 @@ module.exports = class Compiler {
     return {
       destpath
     }
+  }
+
+  _template (content, file, ) {
+
   }
 }

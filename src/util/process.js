@@ -30,32 +30,26 @@ function spawn (command, args) {
 const typo = require('typo')()
 .use(require('typo-chalk'))
 
-function log (t, error, data) {
-  const str = template(t, error, data)
-
-  error
-    ? console.error(str)
-    : console.log(str)
+function log (t, data) {
+  const str = template(t, data)
+  console.log(str)
 }
 
 
-function template (t = '', error, data = {}) {
-  if (error) {
-    t = '{{white.bgRed Error}} ' + t
-  }
-
+function template (t = '', data = {}) {
   return typo.template(t, data, {
     async: false
   })
 }
 
 
-function fail (template, data = {}) {
-  if (template instanceof Error) {
-    log(template.stack, true)
-    return process.exit(1)
-  }
+function fail (message) {
+  message = template('{{white.bgRed Error}} ') + (
+    message instanceof Error
+      ? message.stack
+      : message
+  )
 
-  log(template, true, data)
+  console.error(message)
   process.exit(1)
 }

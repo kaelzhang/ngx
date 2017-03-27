@@ -47,7 +47,7 @@ function readUpstreams (yaml) {
 
 function list_all (upstreams) {
   upstreams.forEach((name, servers) => {
-    log('{{cyan name}}', false, {name})
+    log('{{cyan name}}', {name})
 
     servers.forEach(({ip, port, enabled}) => {
       if (!enabled) {
