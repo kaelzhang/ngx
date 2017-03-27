@@ -60,6 +60,7 @@ class Server {
 
   async _serverToString (port, include) {
     const content = await include(this._routeString())
+    const ssl = await include('snippet/ssl.conf')
 
     if (port === 443) {
       return `server {
@@ -67,7 +68,7 @@ class Server {
   server_name ${this._server_name.join(' ')};
   proxy_set_header 'X-Gaia-Use-HTTPS' '1';
   proxy_set_header 'X-Gaia-Level' '2';
-  include snippet/ssl.conf;
+  ${ssl};
   ${content};
 }`
     }

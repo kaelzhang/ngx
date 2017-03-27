@@ -113,12 +113,16 @@ module.exports = class Compiler {
     return this._includeMany(file)
   }
 
-  async _includeOne (file) {
-    const data = {
-      ...this._data
+  _cleanData (data) {
+    if (data._ngx) {
+      return data
     }
 
-    Object.defineProperties(data, {
+    const cleaned = {
+      ...data
+    }
+
+    Object.defineProperties(cleaned, {
       upstreams: {
         get () {
           throw new Error(
@@ -131,8 +135,18 @@ module.exports = class Compiler {
           throw new Error(
             `{{servers}} is not allowed in non-entry files, "${file}"`)
         }
+      },
+
+      _ngx: {
+        value: true
       }
     })
+
+    return cleaned
+  }
+
+  async _includeOne (file) {
+    const data = this._cleanData(this._data)
 
     // Or we should use the new compiled file
     const {
@@ -154,7 +168,7 @@ module.exports = class Compiler {
 
     return Promise.all(files.map(file => this._includeOne(file)))
     .then(results => {
-      return results.join(';')
+      return results.join(';\n')
     })
   }
 
@@ -167,6 +181,7 @@ module.exports = class Compiler {
 
   async transform (content) {
     content = content || await readFile(this._filepath)
+
     const compiled = await this._typo.template(
       content.toString(), this._data, {
         value_not_defined: 'throw',
