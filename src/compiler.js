@@ -197,19 +197,12 @@ module.exports = class Compiler {
   }
 
   _template () {
-    const file = this._filepath
-
-    return readFile(file)
+    return readFile(this._filepath)
     .then(content => {
-      return this._typo.template(
-      content, this._data, {
+      return this._typo.template(content, this._data, {
         value_not_defined: 'throw',
         directive_value_not_defined: 'print'
       })
-    })
-    .catch(err => {
-      err.message += `\n\nat file "${file}"\n`
-      return Promise.reject(err)
     })
   }
 }
