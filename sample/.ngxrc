@@ -1,0 +1,23 @@
+// .ngxrc supports JSON5, so you can have comments here
+{
+  // If there is only one configuration file for all environments,
+  //   the `configFile` field can be a string instead of object
+  // "configFile": "preset.yml"
+  "configFile": {
+    "production": "preset/production.yml",
+    "dev": "preset/my.yml"
+  },
+
+  // The folder that contains uncompiled sources.
+  // It can be either an absolute path
+  //   or a path relative to the current directory
+  "src": "src",
+
+  // `entry` should be inside `src`
+  "entry": "src/nginx.conf",
+
+  // The folder that `ngx` will write built files into.
+  // The `dest` field will also be
+  //   the value of `-p` option of the vanilla nginx command
+  "dest": "nginx"
+}

@@ -28,13 +28,16 @@ $ npm install -g ngx
 ## Usage
 
 ```sh
-# create scaffold
-ngx init
-
 NGX_ENV=production ngx start
 # or
 ngx start --env production
 ```
+
+For now, you can find the example at sample directory.
+
+## Contributing
+
+PRs or wishlists are welcome. Please be free to create a issue.
 
 ## License
 

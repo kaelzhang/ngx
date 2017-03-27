@@ -4,7 +4,7 @@ const path = require('path')
 program
 // If we use sudo, we could not specify env by
 //  NGX_ENV=production ngx reload
-.option('-e, --env [env]', 'specify environment')
+.option('-e, --env [env]', 'specify environment, defaults to "production"')
 .option('--cwd [cwd]', 'set current working directory')
 
 function parse () {
