@@ -180,13 +180,7 @@ module.exports = class Compiler {
   }
 
   async transform () {
-    const content = await readFile(this._filepath)
-
-    const compiled = await this._typo.template(
-      content.toString(), this._data, {
-        value_not_defined: 'throw',
-        directive_value_not_defined: 'print'
-      })
+    const compiled = await this._template()
 
     const hash = crypto.createHash('sha256')
       .update(compiled).digest('hex')
@@ -202,7 +196,20 @@ module.exports = class Compiler {
     }
   }
 
-  _template (content, file, ) {
+  _template () {
+    const file = this._filepath
 
+    return readFile(file)
+    .then(content => {
+      return this._typo.template(
+      content, this._data, {
+        value_not_defined: 'throw',
+        directive_value_not_defined: 'print'
+      })
+    })
+    .catch(err => {
+      err.message += `\n\nat file "${file}"\n`
+      return Promise.reject(err)
+    })
   }
 }
