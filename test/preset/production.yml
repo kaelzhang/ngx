@@ -1,4 +1,4 @@
-upstream:
+upstreams:
   app:
     server:
       # The server list
@@ -14,7 +14,7 @@ upstream:
       # The server list
       - 127.0.0.1:8082
 
-server:
+servers:
   -
     # # If no port defined,
     # # it will listen 80 and 443 simultaneously.

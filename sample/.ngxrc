@@ -13,6 +13,7 @@
   //   or a path relative to the current directory
   "src": "src",
 
+  // The conf file of the main entry, i.e. the value of `-c` option of nginx.
   // `entry` should be inside `src`
   "entry": "src/nginx.conf",
 

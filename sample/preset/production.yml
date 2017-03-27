@@ -1,1 +1,38 @@
+# Indicates that nginx will start with the root privilege
+sudo: true
 worker_connections: 65536
+body_size: 300m
+
+upstreams:
+  api:
+    server:
+      # The server list
+      - 20.3.11.1:8080
+      - 20.3.11.2:8080
+    server_options:
+      weight: 5
+      max_fails: 3
+      fail_timeout: 60s
+
+  static:
+    server:
+      - 20.3.11.1:8081
+
+servers:
+  -
+    # Only listen to 80
+    # If no port defined,
+    # it will listen 80 and 443 simultaneously.
+    port: 80
+    server_name: apis.domain.com
+
+    include: route/domain.com.conf
+    data:
+      upstream: api
+
+  -
+    port: 80
+    server_name: static.domain.com
+    include: route/domain.com.conf
+    data:
+      upstream: static

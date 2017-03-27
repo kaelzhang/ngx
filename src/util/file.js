@@ -28,8 +28,8 @@ function readYaml (filepath) {
   return readFile(filepath)
   .then(parseYaml)
   .then(config => {
-    config.upstreams = new Upstreams(config.upstream)
-    config.servers = new Servers(cleanServers(config.server), {base})
+    config.upstreams = new Upstreams(config.upstreams)
+    config.servers = new Servers(cleanServers(config.servers), {base})
 
     return config
   })
