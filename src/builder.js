@@ -19,9 +19,7 @@ async function build ({
 }) {
 
   const absEntry = path.join(src, entry)
-  const entryContent = await readFile(absEntry)
 
-  const servers = []
   const includeServer = async server => {
     const data = {
       ...config
@@ -36,11 +34,10 @@ async function build ({
       file: entry
     })
 
-    const result = await server.toString(compiler.include)
-    servers.push(result)
+    return await server.toString(compiler.include)
   }
 
-  await Promise.all(
+  const servers = await Promise.all(
     config.servers.map(includeServer)
   )
 

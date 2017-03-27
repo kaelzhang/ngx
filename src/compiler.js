@@ -106,7 +106,7 @@ module.exports = class Compiler {
       return `include ${destpath}`
     }
 
-    if (!isGlob) {
+    if (!isGlob(file)) {
       return this._includeOne(file)
     }
 
