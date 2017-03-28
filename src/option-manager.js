@@ -135,6 +135,10 @@ module.exports = class OptionManager {
 
     if (Object(configFile) === configFile) {
       configFile = configFile[this._env]
+
+      if (!configFile) {
+        throw new Error(`configFile for env "${this._env}" is not defined in ".ngxrc"`)
+      }
     }
 
     return path.resolve(this._cwd, configFile)
