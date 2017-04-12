@@ -21,7 +21,10 @@ function spawn (command, args) {
         return resolve()
       }
 
-      reject(new Error(`command exit with code ${code}`))
+      const error = new Error(`command exit with code ${code}`)
+      error.code = 'ERR_CHILD_PROCESS'
+      error.exitCode = code
+      reject(error)
     })
   })
 }
@@ -43,12 +46,20 @@ function template (t = '', data = {}) {
 }
 
 
-function fail (message) {
-  message = template('{{white.bgRed Error}} ') + (
-    message instanceof Error
+function fail (err) {
+  const is_error = err instanceof Error
+
+  const message = template('{{white.bgRed Error}} ') + (
+    is_error
       ? message.stack
       : message
   )
+
+  const code = is_error
+    ? err.exitCode
+      ? err.exitCode
+      : 1
+    : 1
 
   console.error(message)
   process.exit(1)

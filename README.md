@@ -19,6 +19,7 @@ The Data-driven nginx configuration manager, featured:
 - Resolved path calculation for `include`, `root`, and other directives.
 - Nginx-style template engine and building system to reuse a template with several sets of data.
 - Directive `include` with glob patterns, such as `include conf.d/**/*.conf;`
+-
 
 ## Install
 

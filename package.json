@@ -10,7 +10,8 @@
     "ngx-stop": "lib/bin/stop.js",
     "ngx-test": "lib/bin/test.js",
     "ngx-list": "lib/bin/list.js",
-    "ngx-down": "lib/bin/down.js"
+    "ngx-down": "lib/bin/down.js",
+    "ngx-revert": "lib/bin/revert.js"
   },
   "scripts": {
     "build": "babel src --out-dir lib",

@@ -5,6 +5,7 @@ const program = require('commander')
 program
 .version(require('../../package.json').version)
 .usage('<cmd> [options]')
+.option('-v, --nginx-version', 'show nginx version')
 .command('test', 'test nginx config')
 .command('reload', 'reload nginx server')
 .command('start', 'start nginx server')
@@ -13,3 +14,13 @@ program
 .command('down <ip>:<port>', 'remove a upstream server')
 .command('list [upstream]', 'list all upstreams')
 .parse(process.argv)
+
+
+const {
+  spawn,
+  fail
+} = require('../util/process')
+
+if (program.nginxVersion) {
+  spawn('nginx', ['-v']).catch(fail)
+}
