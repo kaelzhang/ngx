@@ -19,7 +19,6 @@ The Data-driven nginx configuration manager, featured:
 - Resolved path calculation for `include`, `root`, and other directives.
 - Nginx-style template engine and building system to reuse a template with several sets of data.
 - Directive `include` with glob patterns, such as `include conf.d/**/*.conf;`
--
 
 ## Install
 
@@ -37,7 +36,7 @@ ngx start --env production
 
 For now, you can find the example at the [sample](https://github.com/kaelzhang/node-ngx/tree/master/sample) directory.
 
-```
+```sh
 git clone git@github.com:kaelzhang/node-ngx.git
 cd node-ngx
 npm link
