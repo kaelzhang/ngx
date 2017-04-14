@@ -37,6 +37,16 @@ ngx start --env production
 
 For now, you can find the example at the [sample](https://github.com/kaelzhang/node-ngx/tree/master/sample) directory.
 
+```
+git clone git@github.com:kaelzhang/node-ngx.git
+cd node-ngx
+npm link
+cd sample
+ngx start --env production
+```
+
+And the nginx will start and you will find compiled nginx conf files at `sample/nginx` directory.
+
 ## Contributing
 
 PRs or wishlists are welcome. Please be free to create an [issue](https://github.com/kaelzhang/node-ngx/issues/new).
