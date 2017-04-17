@@ -51,7 +51,7 @@ function fail (err) {
 
   const message = template('{{white.bgRed Error}} ') + (
     is_error
-      ? message.stack
+      ? err.stack
       : message
   )
 
