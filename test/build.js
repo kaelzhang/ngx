@@ -22,6 +22,6 @@ test('builder', async t => {
     src,
     dest,
     entry,
-    config
+    data: config
   })
 })
