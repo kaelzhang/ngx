@@ -14,7 +14,7 @@
   "src": "src",
 
   // The conf file of the main entry, i.e. the value of `-c` option of nginx.
-  // `entry` should be inside `src`
+  // `entry` must be inside the `src` directory
   "entry": "src/nginx.conf",
 
   // The folder that `ngx` will write built files into.
