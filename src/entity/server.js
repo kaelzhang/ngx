@@ -60,9 +60,10 @@ class Server {
 
   async _serverToString (port, include) {
     const content = await include(this._routeString())
-    const ssl = await include('snippet/ssl.conf')
 
     if (port === 443) {
+      const ssl = await include('snippet/ssl.conf')
+
       return `server {
   listen ${port} ssl http2;
   server_name ${this._server_name.join(' ')};

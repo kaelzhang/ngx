@@ -26,8 +26,8 @@ module.exports = class Compiler {
     this._isEntry = isEntry
 
     this._file = file
-    this._filepath = path.join(src, file)
-    this._destpath = path.join(dest, file)
+    this._filepath = path.resolve(src, file)
+    this._destpath = path.resolve(dest, file)
 
     this._srcbase = path.dirname(this._filepath)
     this._destbase = path.dirname(this._destpath)
