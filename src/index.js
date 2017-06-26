@@ -1,38 +1,30 @@
-const build = require('./builder')
+import build from './builder'
 
 const save = opts => saveUpstreams(opts.dest, opts.data.upstreams)
 const remove = opts => removeSavedUpstreams(opts.dest)
 
-const test = c('test', '{{cyan test}} configurations ...')
-const reload = c('reload', '{{cyan reload}} nginx ...', save)
-const stop = c('stop', '{{cyan stop}} nginx ...', remove)
-const start = c('start', '{{cyan start}} nginx ...', save)
-
-module.exports = {
-  parseOptions,
-  build,
-  test,
-  reload,
-  start,
-  stop
-}
+export const test = c('test', '{{cyan test}} configurations ...')
+export const reload = c('reload', '{{cyan reload}} nginx ...', save)
+export const stop = c('stop', '{{cyan stop}} nginx ...', remove)
+export const start = c('start', '{{cyan start}} nginx ...', save)
+export {build}
 
 
-const path = require('path')
-const command = require('./nginx-command')
-const OptionManager = require('./option-manager')
-const {
+import path from 'path'
+import command from './nginx-command'
+import OptionManager from './option-manager'
+import {
   readYaml,
   saveUpstreams,
   removeSavedUpstreams
-} = require('./util/file')
-const {
+} from './util/file'
+import {
   spawn,
   log
-} = require('./util/process')
+} from './util/process'
 
 
-async function parseOptions ({
+export async function parseOptions ({
   cwd, options
 }) {
 

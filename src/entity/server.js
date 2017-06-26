@@ -1,6 +1,6 @@
-const make_array = require('make-array')
+import make_array from 'make-array'
 
-class Servers {
+export class Servers {
   constructor (servers) {
     this._servers = make_array(servers)
     .map(server => new Server(server))
@@ -21,7 +21,7 @@ class Servers {
 }
 
 
-class Server {
+export class Server {
   constructor ({
     port = [80, 443],
     server_name,
@@ -95,10 +95,4 @@ class Server {
       return contents.join('\n\n')
     })
   }
-}
-
-
-module.exports = {
-  Servers,
-  Server
 }

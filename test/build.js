@@ -1,9 +1,10 @@
-const test = require('ava')
-const build = require('../lib/builder')
-const {
+import test from 'ava'
+import build from '../lib/builder'
+import {
   readYaml
-} = require('../lib/util/file')
-const path = require('path')
+} from '../lib/util/file'
+import path from 'path'
+import fs from 'fs-extra'
 
 
 function fixture (p) {

@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 
-const {
+import {
   program,
   parse
-} = require('../util/commander')
+} from '../util/commander'
 
-const {
+import {
   fail,
   log
-} = require('../util/process')
+} from '../util/process'
 
-const {
+import {
   readSavedUpstreams,
   readYaml
-} = require('../util/file')
+} from '../util/file'
 
-const {
+import {
   parseOptions
-} = require('..')
+} from '..'
 
 parse()
 

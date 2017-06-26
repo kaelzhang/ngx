@@ -1,17 +1,17 @@
-const typo = require('typo')
-const path = require('path')
-const crypto = require('crypto')
-const fs = require('fs-promise')
-const isGlob = require('is-glob')
-const globby = require('globby')
-const {
+import typo from 'typo'
+import path from 'path'
+import crypto from 'crypto'
+import fs from 'fs-promise'
+import isGlob from 'is-glob'
+import globby from 'globby'
+import {
   readFile,
   decorate,
   handleSemicolon
-} = require('./util/file')
+} from './util/file'
 
 
-module.exports = class Compiler {
+export default class Compiler {
   constructor ({
     data = {},
     file,

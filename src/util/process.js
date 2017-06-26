@@ -1,14 +1,9 @@
-module.exports = {
-  log,
-  template,
-  fail,
-  spawn
-}
+import _spawn from 'cross-spawn'
+import _debug from 'debug'
 
-const _spawn = require('cross-spawn')
-const debug = require('debug')('ngx')
+const debug = _debug('ngx')
 
-function spawn (command, args) {
+export function spawn (command, args) {
   debug('spawn %s %s', command, args.join(' '))
 
   const p = _spawn(command, args, {
@@ -30,23 +25,25 @@ function spawn (command, args) {
 }
 
 
-const typo = require('typo')()
+import _typo from 'typo'
+
+const typo = _typo()
 .use(require('typo-chalk'))
 
-function log (t, data) {
+export function log (t, data) {
   const str = template(t, data)
   console.log(str)
 }
 
 
-function template (t = '', data = {}) {
+export function template (t = '', data = {}) {
   return typo.template(t, data, {
     async: false
   })
 }
 
 
-function fail (err) {
+export function fail (err) {
   const is_error = err instanceof Error
 
   const message = template('{{white.bgRed Error}} ') + (

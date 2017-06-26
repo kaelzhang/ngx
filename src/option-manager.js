@@ -1,8 +1,8 @@
-const json = require('json5')
-const path = require('path')
-const {
+import json from 'json5'
+import path from 'path'
+import {
   readFile
-} = require('./util/file')
+} from './util/file'
 
 
 module.exports = class OptionManager {

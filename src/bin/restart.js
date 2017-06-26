@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-const {
+import {
   program,
   parse
-} = require('../util/commander')
+} from '../util/commander'
 
-const {
+import {
   fail
-} = require('../util/process')
+} from '../util/process'
 
-const {
+import {
   parseOptions,
   start,
   stop,
   build
-} = require('..')
+} from '..'
 
 parse()
 

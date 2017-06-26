@@ -1,5 +1,5 @@
-const program = require('commander')
-const path = require('path')
+import program from 'commander'
+import path from 'path'
 
 program
 // If we use sudo, we could not specify env by
@@ -7,7 +7,9 @@ program
 .option('-e, --env [env]', 'specify environment, defaults to "production"')
 .option('--cwd [cwd]', 'set current working directory')
 
-function parse () {
+export {program}
+
+export function parse () {
   program.parse(process.argv)
 
   program.cwd = program.cwd
@@ -15,9 +17,4 @@ function parse () {
     : process.cwd()
 
   program.env = program.env || 'production'
-}
-
-module.exports = {
-  program,
-  parse
 }

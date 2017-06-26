@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-const {
+import {
   program,
   parse
-} = require('../util/commander')
+} from '../util/commander'
 
-const {
+import {
   fail,
   log
-} = require('../util/process')
+} from '../util/process'
 
-const {
+import {
   parseOptions,
   reload,
   build
-} = require('..')
+} from '..'
 
 program.usage('<ip>[:<port>] ... [options]')
 parse()

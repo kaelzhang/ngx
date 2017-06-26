@@ -1,13 +1,11 @@
-module.exports = build
-
-const {
+import {
   readFile
-} = require('./util/file')
-const Compiler = require('./compiler')
-const path = require('path')
-const fs = require('fs-promise')
+} from './util/file'
+import Compiler from './compiler'
+import path from 'path'
+import fs from 'fs-promise'
 
-async function build ({
+export default async function build ({
   // @param {path} src Absolute url
   src,
   // @param {path} dest Absolute url

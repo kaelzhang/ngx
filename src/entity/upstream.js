@@ -1,5 +1,5 @@
 const UPSTREAMS_ADD = Symbol.for('add-upstream')
-const make_array = require('make-array')
+import make_array from 'make-array'
 
 const RESERVED_UPSTREAM_NAMES = [
   'constructor',
@@ -8,7 +8,7 @@ const RESERVED_UPSTREAM_NAMES = [
   'toString'
 ]
 
-class Upstreams {
+export class Upstreams {
   constructor (upstreams) {
     this._upstreams = {}
 
@@ -55,7 +55,7 @@ class Upstreams {
 }
 
 
-class Upstream {
+export class Upstream {
   constructor (name, {
     server_options,
     server
@@ -106,7 +106,7 @@ ${this._serverToString()}
 
 const REGEX_SERVER = /(^[^:]+)(?::(\d+))?(?:\s+(.*))?$/
 
-class UpstreamServer {
+export class UpstreamServer {
   constructor (server, default_options = null) {
     const {
       ip,
@@ -191,11 +191,4 @@ class UpstreamServer {
     const options_string = this._stringify_options(this._options)
     return `  server ${this._ip}:${this._port}${options_string};`
   }
-}
-
-
-module.exports = {
-  Upstreams,
-  Upstream,
-  UpstreamServer
 }

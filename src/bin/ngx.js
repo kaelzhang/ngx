@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const program = require('commander')
+import program from 'commander'
 
 program
 .version(require('../../package.json').version)
@@ -16,10 +16,10 @@ program
 .parse(process.argv)
 
 
-const {
+import {
   spawn,
   fail
-} = require('../util/process')
+} from '../util/process'
 
 if (program.nginxVersion) {
   spawn('nginx', ['-v']).catch(fail)

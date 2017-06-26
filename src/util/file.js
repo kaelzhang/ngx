@@ -1,28 +1,17 @@
-module.exports = {
-  readYaml,
-  readFile,
-  decorate,
-  handleSemicolon,
-  readSavedUpstreams,
-  saveUpstreams,
-  removeSavedUpstreams
-}
-
-
-const yaml = require('js-yaml')
-const fs = require('fs-promise')
-const path = require('path')
-const code = require('code-stringify')
-const {
+import yaml from 'js-yaml'
+import fs from 'fs-promise'
+import path from 'path'
+import code from 'code-stringify'
+import {
   Upstreams
-} = require('../entity/upstream')
+} from '../entity/upstream'
 
-const {
+import {
   Servers
-} = require('../entity/server')
+} from '../entity/server'
 
 
-function readYaml (filepath) {
+export function readYaml (filepath) {
   const base = path.basename(filepath)
 
   return readFile(filepath)
@@ -48,7 +37,7 @@ async function parseYaml (content) {
 }
 
 
-function readFile (filepath) {
+export function readFile (filepath) {
   return fs.readFile(filepath)
   .then(content => {
     return content.toString()
@@ -61,13 +50,13 @@ function readFile (filepath) {
 
 
 const REGEX_EXT = /\.[a-z0-9]+(?:$|\?)/
-function decorate (basename, hash) {
+export function decorate (basename, hash) {
   return basename.replace(REGEX_EXT, ext => '-' + hash.slice(0, 10) + ext)
 }
 
 
 const SEMICOLON = ';'
-function handleSemicolon (fn) {
+export function handleSemicolon (fn) {
   return async p => {
     const lastIndex = p.lastIndexOf(SEMICOLON)
     const has = lastIndex === p.length - 1
@@ -86,7 +75,7 @@ function handleSemicolon (fn) {
 }
 
 
-async function readSavedUpstreams (cwd) {
+export async function readSavedUpstreams (cwd) {
   const upstreams = require(upstreamFile(cwd))
 
   Object.defineProperty(upstreams, 'forEach', {
@@ -107,7 +96,7 @@ function upstreamFile (cwd) {
 }
 
 
-function saveUpstreams (cwd, upstreams) {
+export function saveUpstreams (cwd, upstreams) {
   const us = {}
   upstreams.forEach((name, servers) => {
     us[name] = servers
@@ -118,6 +107,6 @@ function saveUpstreams (cwd, upstreams) {
 }
 
 
-function removeSavedUpstreams (cwd) {
+export function removeSavedUpstreams (cwd) {
   return fs.unlink(upstreamFile(cwd))
 }
