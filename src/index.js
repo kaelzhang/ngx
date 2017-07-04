@@ -38,7 +38,7 @@ export async function parseOptions ({
     entry
   } = await new OptionManager({
     cwd,
-    options
+    env
   }).get()
 
   const data = await readYaml(preset)
