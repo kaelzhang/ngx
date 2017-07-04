@@ -38,13 +38,15 @@ export default class Compiler {
     this.filebase = path.dirname(this.filepath)
     this.destFilebase = path.dirname(this.destpath)
 
+    this.directives = Object.create(null)
+
     this.includes = []
 
     this._createCompiler()
   }
 
   _createCompiler () {
-    const directive = Object.create(null)
+    const directives = this.directives
 
     const methods = 'root include pid error_log user'.split(' ')
 
@@ -59,11 +61,11 @@ export default class Compiler {
 
     methods
     .forEach((name, i) => {
-      this[name] = directive[name] = impls[i]
+      directives[name] = impls[i]
     })
 
     this._typo = typo()
-    .use(directive)
+    .use(directives)
   }
 
   _resolve (p) {
@@ -83,7 +85,7 @@ export default class Compiler {
       // `path` relative path to src
       file: inside
         ? relative
-        : undefined,
+        : undefined
     }
   }
 

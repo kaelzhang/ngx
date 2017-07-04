@@ -32,7 +32,7 @@ export default async function build ({
       file: entry
     })
 
-    return await server.toString(compiler.include)
+    return await server.toString(compiler.directives.include)
   }
 
   const servers = await Promise.all(

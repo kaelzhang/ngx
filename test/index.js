@@ -14,7 +14,7 @@ function fixture (p) {
 test('builder', async t => {
   const src = fixture('src')
   const dest = fixture('nginx')
-  const entry = fixture('src/nginx.conf')
+  const entry = 'nginx.conf'
 
   const configFile = fixture('preset/production.yml')
   const config = await readYaml(configFile)

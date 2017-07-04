@@ -106,6 +106,11 @@ module.exports = class OptionManager {
       // `path` absolute path of the yaml configuration file
       preset,
 
+      // `path` relative path to `src`
+      // suppose
+      // - src: foo
+      // - entry: foo/nginx.conf
+      // -> entry: nginx.conf
       entry: relativeEntry
     }
   }

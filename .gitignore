@@ -2,9 +2,9 @@
 /lib
 
 # test spec
-/test/nginx
-/test/config
-/test/logs
+/test/**/nginx
+/test/**/config
+/test/**/logs
 
 # Numerous always-ignore extensions
 *.bak
