@@ -17,17 +17,16 @@ import {
 } from '..'
 
 program.usage('<ip>[:<port>] ... [options]')
-parse()
 
-const cwd = program.cwd
-const env = program.env
-const servers = program.args
+
+const options = parse()
+const servers = options.args
 
 if (!servers || !servers.length) {
   return fail('no server specified')
 }
 
-parseOptions({cwd, options: {env}})
+parseOptions(options)
 .then(opts => {
   const upstreams = opts.data.upstreams
 

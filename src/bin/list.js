@@ -19,23 +19,24 @@ import {
   parseOptions
 } from '..'
 
-parse()
+const options = parse()
+const {
+  cwd,
+  args
+} = options
 
-const cwd = program.cwd
-const env = program.env
-
-parseOptions({cwd, options: {env}})
-.then(({configFile}) => {
+parseOptions(options)
+.then(({preset}) => {
   return readSavedUpstreams(cwd)
   .catch(err => {
     log('{{white.bgYellow warn}} fails to read runtime upstreams, fallback to config...')
     log('{{white.bgYellow warn}} which means maybe your nginx server is not started.')
-    return readUpstreams(configFile)
+    return readUpstreams(preset)
   })
 })
 .then(upstreams => {
-  program.args.length
-    ? list(upstreams, program.args[0])
+  args.length
+    ? list(upstreams, args[0])
     : list_all(upstreams)
 })
 

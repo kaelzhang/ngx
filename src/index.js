@@ -25,26 +25,39 @@ import {
 
 
 export async function parseOptions ({
-  cwd, options
+  cwd,
+  env,
+  user,
+  group
 }) {
 
   const {
     src,
     dest,
-    configFile,
+    preset,
     entry
   } = await new OptionManager({
     cwd,
     options
   }).get()
 
-  const data = await readYaml(configFile)
+  const data = await readYaml(preset)
+
+  if (!data.user && !user) {
+    const error = new Error(
+`user must be defined to prevent further problems, you can specify it either:
+  - with cli option "--user <user>:<group>"
+  - or in preset file`)
+    return Promise.reject(error)
+  }
+
+  data.user = data.user || `${user} ${group}`
 
   return {
     src,
     dest,
     data,
-    configFile,
+    preset,
     entry
   }
 }

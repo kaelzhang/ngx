@@ -16,12 +16,8 @@ import {
   build
 } from '..'
 
-parse()
 
-const cwd = program.cwd
-const env = program.env
-
-parseOptions({cwd, options: {env}})
+parseOptions(parse())
 .then(stop)
 .then(build)
 .then(start)

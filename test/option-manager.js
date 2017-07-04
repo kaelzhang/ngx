@@ -9,10 +9,10 @@ function resolve (...paths) {
 const CASES = [
 {
   d: 'normal rc file, prior to .ngxrc',
-  // cwd
-  c: resolve('rc'),
   // options
-  o: {},
+  o: {
+    cwd: resolve('rc')
+  },
   // expect
   e: {
     src: resolve('rc', 'foo'),
@@ -26,8 +26,8 @@ const CASES = [
 },
 {
   d: '.ngxrc.js file',
-  c: resolve('rcjs'),
   o: {
+    cwd: resolve('rcjs'),
     env: 'production'
   },
   e: {
@@ -39,8 +39,8 @@ const CASES = [
 },
 {
   d: 'package.json ngx field',
-  c: resolve('pkg'),
   o: {
+    cwd: resolve('pkg'),
     env: 'production'
   },
   e: {
@@ -52,7 +52,9 @@ const CASES = [
 },
 {
   d: 'rc not found',
-  c: resolve('nowhere'),
+  o: {
+    cwd: resolve('nowhere')
+  },
   err: '.ngxrc not found'
 }
 ]
@@ -61,7 +63,7 @@ const CASES = [
 CASES.forEach(({
   d,
   c,
-  o,
+  o = {},
   e,
   err,
   only
@@ -74,10 +76,7 @@ CASES.forEach(({
   _test(d, async t => {
     let result
     try {
-      result = await new OptionManager({
-        cwd: c,
-        options: o
-      }).get()
+      result = await new OptionManager(o).get()
 
     } catch (e) {
       if (!err) {

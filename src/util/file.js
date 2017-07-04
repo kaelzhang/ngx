@@ -51,6 +51,7 @@ export function readFile (filepath) {
 }
 
 
+// abc.conf, abcde -> abc-abcde.conf
 const REGEX_EXT = /\.[a-z0-9]+(?:$|\?)/
 export function decorate (basename, hash) {
   return basename.replace(REGEX_EXT, ext => '-' + hash.slice(0, 10) + ext)
@@ -63,6 +64,7 @@ export function handleSemicolon (fn) {
     const lastIndex = p.lastIndexOf(SEMICOLON)
     const has = lastIndex === p.length - 1
 
+    // removes the last semicolon
     if (has) {
       p = p.substr(0, lastIndex)
     }
@@ -70,8 +72,13 @@ export function handleSemicolon (fn) {
     const result = await fn(p)
     return has
       ? result
+        // {{root /path/to;}} -> root /path/to;
         ? result + SEMICOLON
+        // {{root /path/to}}  -> ''
+        // avoid to output an unnecessary `;`
         : ''
+
+      // {{root /path/to}}    -> root /path/to
       : result
   }
 }

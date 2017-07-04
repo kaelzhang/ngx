@@ -9,18 +9,16 @@ module.exports = class OptionManager {
   constructor ({
     cwd,
 
-    // cli options, including
-    // - env `String=` NGX_ENV
-    options
+    // `String=` NGX_ENV
+    env
   }) {
-    this._cwd = path.resolve(cwd)
-    this._options = options
 
-    this._env = options.env || process.env.NGX_ENV
+    this.cwd = path.resolve(cwd)
+    this.env = env || process.env.NGX_ENV
   }
 
   async _readNgxrc () {
-    const rc = path.join(this._cwd, '.ngxrc')
+    const rc = path.join(this.cwd, '.ngxrc')
     const content = await readFile(rc)
     return {
       value: json.parse(content),
@@ -30,7 +28,7 @@ module.exports = class OptionManager {
   }
 
   _readNgxrcJs () {
-    const rcjs = path.join(this._cwd, '.ngxrc.js')
+    const rcjs = path.join(this.cwd, '.ngxrc.js')
     return {
       value: require(rcjs),
       filepath: rcjs,
@@ -39,7 +37,7 @@ module.exports = class OptionManager {
   }
 
   _readPackage () {
-    const packageJson = path.join(this._cwd, 'package.json')
+    const packageJson = path.join(this.cwd, 'package.json')
     const pkg = require(packageJson)
 
     if (!pkg.ngx) {
@@ -86,7 +84,6 @@ module.exports = class OptionManager {
       value: rc,
       filepath
     } = await this._read()
-    const cli = this._options
 
     this._rc = rc
     this._rcBase = path.dirname(filepath)
@@ -133,10 +130,10 @@ module.exports = class OptionManager {
     }
 
     if (Object(preset) === preset) {
-      preset = preset[this._env]
+      preset = preset[this.env]
 
       if (!preset) {
-        throw new Error(`preset for env "${this._env}" is not defined in ".ngxrc"`)
+        throw new Error(`preset for env "${this.env}" is not defined in ".ngxrc"`)
       }
     }
 

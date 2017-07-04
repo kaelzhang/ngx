@@ -10,33 +10,41 @@ import {
   handleSemicolon
 } from './util/file'
 
+const NGX = Symbol('ngx-cleaned')
 
 export default class Compiler {
   constructor ({
+    // `Object` data to be substitute
     data = {},
+    // `path` relative path of the file to be compiled
     file,
+    // `path` rc.dest
     dest,
+    // `path` rc.src
     src,
+    // `Boolean` whether the file is rc.entry
     isEntry
   }) {
 
-    this._data = data
-    this._src = src
-    this._dest = dest
-    this._isEntry = isEntry
+    this.data = data
+    this.src = src
+    this.dest = dest
+    this.isEntry = isEntry
 
-    this._file = file
-    this._filepath = path.resolve(src, file)
-    this._destpath = path.resolve(dest, file)
+    this.file = file
+    this.filepath = path.join(src, file)
+    this.destpath = path.join(dest, file)
 
-    this._srcbase = path.dirname(this._filepath)
-    this._destbase = path.dirname(this._destpath)
+    this.filebase = path.dirname(this.filepath)
+    this.destFilebase = path.dirname(this.destpath)
+
+    this.includes = []
 
     this._createCompiler()
   }
 
   _createCompiler () {
-    const directive = {}
+    const directive = Object.create(null)
 
     const methods = 'root include pid error_log user'.split(' ')
 
@@ -59,29 +67,33 @@ export default class Compiler {
   }
 
   _resolve (p) {
-    const abs = path.join(this._srcbase, p)
-    const relative = path.relative(this._src, abs)
+    const abs = path.join(this.filebase, p)
+    const relative = path.relative(this.src, abs)
     const inside = relative.indexOf('..') !== 0
 
     return {
+      // `Boolean` whether inside the src
       inside,
 
-      // absolute path
+      // `path` absolute path of the file to be written to
       destpath: inside
-        ? path.join(this._destbase, p)
+        ? path.join(this.destFilebase, p)
         : abs,
 
-      // relative path to src
+      // `path` relative path to src
       file: inside
         ? relative
         : undefined,
     }
   }
 
+  // @returns `function` the helper function to handle paths
   _directive (name) {
     return async p => `${name} ${this._resolve(p).destpath}`
   }
 
+  // @returns `function` the helper function to handle paths and
+  // ensures directory
   _ensure (name) {
     return async p => {
       const {
@@ -94,6 +106,9 @@ export default class Compiler {
     }
   }
 
+  // @returns `function`
+  // - recursively compile included files
+  // - handle glob stars
   async _include (p) {
     const {
       file,
@@ -113,8 +128,9 @@ export default class Compiler {
     return this._includeMany(file)
   }
 
+  // Do not allow to use upstreams and servers in non-entry file
   _cleanData (data) {
-    if (data._ngx) {
+    if (data[NGX]) {
       return data
     }
 
@@ -137,7 +153,7 @@ export default class Compiler {
         }
       },
 
-      _ngx: {
+      [NGX]: {
         value: true
       }
     })
@@ -146,24 +162,27 @@ export default class Compiler {
   }
 
   async _includeOne (file) {
-    const data = this._cleanData(this._data)
+    const data = this._cleanData(this.data)
+
+    const sub = new Compiler({
+      data,
+      file,
+      dest: this.dest,
+      src: this.src
+    })
+    this.includes.push(sub)
 
     // Or we should use the new compiled file
     const {
       destpath: compiledDest
-    } = await new Compiler({
-      data,
-      file,
-      dest: this._dest,
-      src: this._src
-    }).transform()
+    } = await sub.transform()
 
     return `include ${compiledDest}`
   }
 
   async _includeMany (file) {
     const files = await globby(file, {
-      cwd: this._src
+      cwd: this.src
     })
 
     return Promise.all(files.map(file => this._includeOne(file)))
@@ -173,10 +192,7 @@ export default class Compiler {
   }
 
   async _user (user) {
-    // Only show in sudo
-    return this._data.sudo === false
-      ? ''
-      : `user ${user}`
+    return `user ${user}`
   }
 
   async transform () {
@@ -185,9 +201,9 @@ export default class Compiler {
     const hash = crypto.createHash('sha256')
       .update(compiled).digest('hex')
 
-    const destpath = this._isEntry
-      ? this._destpath
-      : decorate(this._destpath, hash)
+    const destpath = this.isEntry
+      ? this.destpath
+      : decorate(this.destpath, hash)
 
     await fs.outputFile(destpath, compiled)
 
@@ -197,9 +213,9 @@ export default class Compiler {
   }
 
   _template () {
-    return readFile(this._filepath)
+    return readFile(this.filepath)
     .then(content => {
-      return this._typo.template(content, this._data, {
+      return this._typo.template(content, this.data, {
         value_not_defined: 'throw',
         directive_value_not_defined: 'print'
       })

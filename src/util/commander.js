@@ -5,16 +5,31 @@ program
 // If we use sudo, we could not specify env by
 //  NGX_ENV=production ngx reload
 .option('-e, --env [env]', 'specify environment, defaults to "production"')
-.option('--cwd [cwd]', 'set current working directory')
+.option('-c, --cwd [cwd]', 'set current working directory')
+.option('-u, --user [user]', 'define the <user:group> used by worker processes')
 
 export {program}
 
 export function parse () {
   program.parse(process.argv)
 
-  program.cwd = program.cwd
+  const cwd = program.cwd
     ? path.resolve(program.cwd)
     : process.cwd()
 
-  program.env = program.env || 'production'
+  const env = program.env || 'production'
+
+  const options = {
+    cwd,
+    env,
+    args: program.args
+  }
+
+  if (program.user) {
+    const splitted = program.user.split(':')
+    options.user = splitted[0]
+    options.group = splitted[1] || options.user
+  }
+
+  return options
 }
