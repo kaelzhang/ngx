@@ -1,6 +1,6 @@
 // .ngxrc supports JSON5
 {
-  "configFile": {
+  "preset": {
     "production": "preset/production.yml"
   },
   "src": "src",

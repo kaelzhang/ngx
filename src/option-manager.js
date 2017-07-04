@@ -10,7 +10,11 @@ module.exports = class OptionManager {
     cwd,
 
     // cli options, including
-    // - env `String` NGX_ENV
+    // - env `String=` NGX_ENV
+    // - src `path=` will override rc.src
+    // - dest `path=` will override rc.dest
+    // - preset `path=` will override rc.preset
+    // - entry `path=` will override rc.entry
     options
   }) {
     this._cwd = path.resolve(cwd)
@@ -81,66 +85,77 @@ module.exports = class OptionManager {
 
   async get () {
     const {
-      value: config
+      value: rc
+      filepath
     } = await this._read()
     const cli = this._options
 
-    const src = cli.src || config.src
-    if (!src) {
-      return Promise.reject(new Error('src is not defined'))
-    }
+    this._rc = rc
+    this._rcPath = filepath
 
-    const dest = cli.dest || config.dest
-    if (!dest) {
-      return Promise.reject(new Error('dest is not defined'))
-    }
-
-    const configFile = this._configFile(config)
-    if (!configFile) {
-      return Promise.reject(new Error('configFile is not defined'))
-    }
-
-    const entry = cli.entry || config.entry
-    if (!entry) {
-      return Promise.reject(new Error('entry is not defined'))
-    }
+    const preset = this._presetFile()
+    const src = this._resolve('src')
+    const dest = this._resolve('dest')
+    const entry = this._resolve('entry')
 
     const relativeEntry = path.relative(src, entry)
+    if (relativeEntry.indexOf('..') === 0) {
+      return Promise.reject(new Error('entry should inside directory `src`'))
+    }
 
     return {
-      src: this._resolve(src),
-      dest: this._resolve(dest),
-      configFile,
+      // `path` absolute path, the unbuilt source files
+      src,
+      // `path` absolute path, the directory to build dest files into
+      dest,
+      // `path` absolute path of the yaml configuration file
+      preset,
 
-      // TODO,
-      // - nginx.conf -> relative to src
-      // - ./nginx.conf -> relative to configFile
-      // - /path/to/nginx.conf -> path.relative
       entry: relativeEntry
     }
   }
 
-  _resolve (p) {
-    return path.resolve(this._cwd, p)
-  }
+  // Resolve a key from cli or rc
+  // - cli: resolve with cwd
+  // - rc: resolve with rcPath
+  // Priority
+  // cli > rc
+  _resolve (key) {
+    const cli = this._options
+    const rc = this._rc
 
-  _configFile (config) {
-    let configFile = this._options.config
-
-    if (configFile) {
-      return configFile
+    if (key in cli) {
+      return path.resolve(this._cwd, cli[key])
     }
 
-    configFile = config.configFile
+    if (key in rc) {
+      return path.resolve(this._rcPath, rc[key])
+    }
 
-    if (Object(configFile) === configFile) {
-      configFile = configFile[this._env]
+    throw new Error(`${key} is not defined`)
+  }
 
-      if (!configFile) {
-        throw new Error(`configFile for env "${this._env}" is not defined in ".ngxrc"`)
+  _presetFile () {
+    let preset = this._options.preset
+
+    if (preset) {
+      return path.resolve(this._cwd, preset)
+    }
+
+    preset = this._rc.preset
+
+    if (!preset) {
+      throw new Error('preset is not defined')
+    }
+
+    if (Object(preset) === preset) {
+      preset = preset[this._env]
+
+      if (!preset) {
+        throw new Error(`preset for env "${this._env}" is not defined in ".ngxrc"`)
       }
     }
 
-    return path.resolve(this._cwd, configFile)
+    return path.resolve(this._rcPath, preset)
   }
 }
