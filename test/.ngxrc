@@ -1,0 +1,9 @@
+// .ngxrc supports JSON5
+{
+  "preset": {
+    "production": "preset/production.yml"
+  },
+  "src": "src",
+  "dest": "nginx",
+  "entry": "src/nginx.conf"
+}

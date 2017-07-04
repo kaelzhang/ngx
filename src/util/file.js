@@ -44,6 +44,8 @@ export function readFile (filepath) {
   })
   .catch(err => {
     const error = new Error(`fails to read "${filepath}", ${err.stack}`)
+    // make sure the original error.code
+    error.code = err.code
     return Promise.reject(error)
   })
 }

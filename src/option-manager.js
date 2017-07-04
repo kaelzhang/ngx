@@ -11,10 +11,6 @@ module.exports = class OptionManager {
 
     // cli options, including
     // - env `String=` NGX_ENV
-    // - src `path=` will override rc.src
-    // - dest `path=` will override rc.dest
-    // - preset `path=` will override rc.preset
-    // - entry `path=` will override rc.entry
     options
   }) {
     this._cwd = path.resolve(cwd)
@@ -81,17 +77,19 @@ module.exports = class OptionManager {
         throw e
       }
     }
+
+    throw new Error('.ngxrc not found')
   }
 
   async get () {
     const {
-      value: rc
+      value: rc,
       filepath
     } = await this._read()
     const cli = this._options
 
     this._rc = rc
-    this._rcPath = filepath
+    this._rcBase = path.dirname(filepath)
 
     const preset = this._presetFile()
     const src = this._resolve('src')
@@ -115,34 +113,20 @@ module.exports = class OptionManager {
     }
   }
 
-  // Resolve a key from cli or rc
-  // - cli: resolve with cwd
+  // Resolve a key from rc
   // - rc: resolve with rcPath
-  // Priority
-  // cli > rc
   _resolve (key) {
-    const cli = this._options
     const rc = this._rc
 
-    if (key in cli) {
-      return path.resolve(this._cwd, cli[key])
-    }
-
     if (key in rc) {
-      return path.resolve(this._rcPath, rc[key])
+      return path.resolve(this._rcBase, rc[key])
     }
 
     throw new Error(`${key} is not defined`)
   }
 
   _presetFile () {
-    let preset = this._options.preset
-
-    if (preset) {
-      return path.resolve(this._cwd, preset)
-    }
-
-    preset = this._rc.preset
+    let preset = this._rc.preset
 
     if (!preset) {
       throw new Error('preset is not defined')
@@ -156,6 +140,6 @@ module.exports = class OptionManager {
       }
     }
 
-    return path.resolve(this._rcPath, preset)
+    return path.resolve(this._rcBase, preset)
   }
 }

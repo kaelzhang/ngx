@@ -1,0 +1,7 @@
+{
+  // supports comments
+  src: 'foo',
+  "dest": 'bar',
+  preset: 'baz',
+  entry: 'foo/qux'
+}

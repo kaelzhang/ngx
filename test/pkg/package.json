@@ -1,0 +1,8 @@
+{
+  "ngx": {
+    "src": "foo",
+    "dest": "bar",
+    "preset": "baz",
+    "entry": "foo/qux"
+  }
+}
