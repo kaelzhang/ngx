@@ -6,7 +6,7 @@ program
 //  NGX_ENV=production ngx reload
 .option('-e, --env [env]', 'specify environment, defaults to "production"')
 .option('-c, --cwd [cwd]', 'set current working directory')
-.option('-u, --user [user]', 'define the <user:group> used by worker processes')
+.option('-u, --user [user]', 'define the <user>:<group> used by worker processes')
 
 export {program}
 
