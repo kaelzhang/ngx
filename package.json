@@ -1,6 +1,6 @@
 {
   "name": "@beastshop/ngx",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "The Data-driven nginx configuration manager",
   "bin": {
     "ngx": "lib/bin/ngx.js",
