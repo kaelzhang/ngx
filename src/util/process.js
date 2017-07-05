@@ -1,7 +1,7 @@
 import _spawn from 'cross-spawn'
 import _debug from 'debug'
 
-const debug = _debug('ngx')
+export const debug = _debug('ngx')
 
 export function spawn (command, args) {
   debug('spawn %s %s', command, args.join(' '))

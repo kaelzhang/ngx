@@ -84,8 +84,8 @@ export function handleSemicolon (fn) {
 }
 
 
-export async function readSavedUpstreams (cwd) {
-  const upstreams = require(upstreamFile(cwd))
+export async function readSavedUpstreams (dir) {
+  const upstreams = require(upstreamFile(dir))
 
   Object.defineProperty(upstreams, 'forEach', {
     value: (fn) => {
@@ -100,22 +100,22 @@ export async function readSavedUpstreams (cwd) {
 }
 
 
-function upstreamFile (cwd) {
-  return path.join(cwd, '.ngx', 'upstream.js')
+function upstreamFile (dir) {
+  return path.join(dir, '.ngx', 'upstream.js')
 }
 
 
-export function saveUpstreams (cwd, upstreams) {
+export function saveUpstreams (dir, upstreams) {
   const us = {}
   upstreams.forEach((name, servers) => {
     us[name] = servers
   })
 
-  return fs.outputFile(upstreamFile(cwd),
+  return fs.outputFile(upstreamFile(dir),
     `module.exports = ${code(us, null, 2)}`)
 }
 
 
-export function removeSavedUpstreams (cwd) {
-  return fs.unlink(upstreamFile(cwd))
+export function removeSavedUpstreams (dir) {
+  return fs.unlink(upstreamFile(dir))
 }

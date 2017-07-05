@@ -7,7 +7,8 @@ import {
 
 import {
   fail,
-  log
+  log,
+  debug
 } from '../util/process'
 
 import {
@@ -26,9 +27,13 @@ const {
 } = options
 
 parseOptions(options)
-.then(({preset}) => {
-  return readSavedUpstreams(cwd)
+.then(({
+  dest,
+  preset
+}) => {
+  return readSavedUpstreams(dest)
   .catch(err => {
+    debug('read upstreams error: %s', err.stack || err)
     log('{{white.bgYellow warn}} fails to read runtime upstreams, fallback to config...')
     log('{{white.bgYellow warn}} which means maybe your nginx server is not started.')
     return readUpstreams(preset)

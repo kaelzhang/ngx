@@ -31,9 +31,9 @@ export class Upstreams {
     })
   }
 
-  remove (ip, port) {
+  remove (...args) {
     Object.keys(this._upstreams).forEach(name => {
-      this._upstreams[name].remove(ip, port)
+      this._upstreams[name].remove(...args)
     })
 
     return this
@@ -79,9 +79,9 @@ export class Upstream {
     return this
   }
 
-  remove (ip, port) {
+  remove (...args) {
     this._servers.forEach((server) => {
-      if (server.is(ip, port)) {
+      if (server.is(...args)) {
         server.disable()
       }
     })
@@ -123,7 +123,14 @@ export class UpstreamServer {
   }
 
   is (ip, port) {
-    return this._ip === ip && (!port || this._port === port)
+    return this._ip === ip && (
+      // we check arguments.length rather than checking
+      // whether port is nullable,
+      // for that people might make mistakes to pass
+      // port argument of null/undefined value
+      arguments.length === 1
+      || this._port === port
+    )
   }
 
   enabled () {

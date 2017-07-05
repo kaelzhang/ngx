@@ -33,6 +33,12 @@ parseOptions(options)
   servers.forEach(server => {
     const [ip, port] = server.split(':').map(x => x.trim())
 
+    if (!port) {
+      log(`{{cyan remove}} upstream server: ${ip}`)
+      upstreams.remove(ip)
+      return
+    }
+
     log(`{{cyan remove}} upstream server: ${ip}:${port}`)
     upstreams.remove(ip, port)
   })
