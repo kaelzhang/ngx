@@ -4,6 +4,8 @@ import {
   readFile
 } from './util/file'
 
+const DEFAULT_ENV = 'production'
+
 
 module.exports = class OptionManager {
   constructor ({
@@ -135,7 +137,7 @@ module.exports = class OptionManager {
     }
 
     if (Object(preset) === preset) {
-      preset = preset[this.env]
+      preset = preset[this.env || DEFAULT_ENV]
 
       if (!preset) {
         throw new Error(`preset for env "${this.env}" is not defined in ".ngxrc"`)
