@@ -51,7 +51,10 @@ export async function parseOptions ({
     return Promise.reject(error)
   }
 
-  data.user = data.user || `${user} ${group}`
+  // cli user has higher priority
+  if (user) {
+    data.user = `${user} ${group}`
+  }
 
   return {
     src,
