@@ -67,8 +67,6 @@ export class Server {
       return `server {
   listen ${port} ssl http2;
   server_name ${this._server_name.join(' ')};
-  proxy_set_header 'X-Gaia-Use-HTTPS' '1';
-  proxy_set_header 'X-Gaia-Level' '2';
   ${ssl};
   ${content};
 }`
