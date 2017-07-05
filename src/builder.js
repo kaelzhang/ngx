@@ -3,7 +3,7 @@ import {
 } from './util/file'
 import Compiler from './compiler'
 import path from 'path'
-import fs from 'fs-promise'
+import fs from 'fs-extra'
 
 export default async function build ({
   // @param {path} src Absolute url

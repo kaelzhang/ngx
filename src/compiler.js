@@ -1,7 +1,7 @@
 import typo from 'typo'
 import path from 'path'
 import crypto from 'crypto'
-import fs from 'fs-promise'
+import fs from 'fs-extra'
 import isGlob from 'is-glob'
 import globby from 'globby'
 import {

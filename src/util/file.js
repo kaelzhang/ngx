@@ -1,5 +1,5 @@
 import yaml from 'js-yaml'
-import fs from 'fs-promise'
+import fs from 'fs-extra'
 import path from 'path'
 import code from 'code-stringify'
 import {
