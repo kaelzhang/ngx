@@ -22,5 +22,9 @@ import {
 } from '../util/process'
 
 if (program.nginxVersion) {
-  spawn('nginx', ['-v']).catch(fail)
+  spawn('nginx', ['-v'])
+  .then(() => {
+    console.log(`ngx version: ngx/${require('../../package.json').version}`)
+  })
+  .catch(fail)
 }
