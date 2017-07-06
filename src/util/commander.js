@@ -10,26 +10,23 @@ program
 
 export {program}
 
-export function parse () {
+
+const NOOP = function () {}
+
+export function parse (extra = NOOP) {
+  extra(program)
+
   program.parse(process.argv)
 
-  const cwd = program.cwd
+  program.cwd = program.cwd
     ? path.resolve(program.cwd)
     : process.cwd()
 
-  const env = program.env || 'production'
-
-  const options = {
-    cwd,
-    env,
-    args: program.args
-  }
-
   if (program.user) {
     const splitted = program.user.split(':')
-    options.user = splitted[0]
-    options.group = splitted[1] || options.user
+    program.user = splitted[0]
+    program.group = splitted[1] || options.user
   }
 
-  return options
+  return program
 }
