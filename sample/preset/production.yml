@@ -1,5 +1,5 @@
 # Indicates that nginx will start with the root privilege
-sudo: true
+user: nginx
 worker_connections: 65536
 body_size: 300m
 

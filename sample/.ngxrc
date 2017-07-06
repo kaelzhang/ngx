@@ -1,9 +1,11 @@
 // .ngxrc supports JSON5, so you can have comments here
 {
   // If there is only one configuration file for all environments,
-  //   the `configFile` field can be a string instead of object
-  // "configFile": "preset.yml"
-  "configFile": {
+  //   the `preset` field can be a string instead of object:
+  // ```
+  // "preset": "preset.yml"
+  // ```
+  "preset": {
     "production": "preset/production.yml",
     "dev": "preset/my.yml"
   },

@@ -1,6 +1,12 @@
 # babel dist
 /lib
 
+/sample/*
+!/sample/preset
+!/sample/src
+!/sample/.ngxrc
+!/sample/README.md
+
 # test spec
 /test/**/nginx
 /test/**/config

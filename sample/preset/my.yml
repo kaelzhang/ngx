@@ -1,3 +1,4 @@
+user: kael staff
 worker_connections: 256
 body_size: 10m
 
