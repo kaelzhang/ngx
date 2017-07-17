@@ -25,7 +25,7 @@ export function parse (extra = NOOP) {
   if (program.user) {
     const splitted = program.user.split(':')
     program.user = splitted[0]
-    program.group = splitted[1] || options.user
+    program.group = splitted[1] || splitted[0]
   }
 
   return program

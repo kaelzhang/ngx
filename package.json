@@ -1,6 +1,6 @@
 {
-  "name": "@beastshop/ngx",
-  "version": "2.2.0",
+  "name": "ngx",
+  "version": "2.2.1",
   "description": "The Data-driven nginx configuration manager",
   "bin": {
     "ngx": "lib/bin/ngx.js",
@@ -61,13 +61,13 @@
   },
   "dependencies": {
     "code-stringify": "^1.2.3",
-    "commander": "^2.10.0",
+    "commander": "^2.11.0",
     "cross-spawn": "^5.1.0",
     "debug": "^2.6.3",
     "fs-extra": "^3.0.1",
     "globby": "^6.1.0",
     "is-glob": "^3.1.0",
-    "js-yaml": "^3.8.2",
+    "js-yaml": "^3.9.0",
     "json5": "^0.5.1",
     "make-array": "^1.0.1",
     "once": "^1.4.0",
