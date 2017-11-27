@@ -82,6 +82,8 @@ export default class Compiler {
         ? path.join(this.destFilebase, p)
         : abs,
 
+      srcpath: abs,
+
       // `path` relative path to src
       file: inside
         ? relative
@@ -91,7 +93,7 @@ export default class Compiler {
 
   // @returns `function` the helper function to handle paths
   _directive (name) {
-    return async p => `${name} ${this._resolve(p).destpath}`
+    return async p => `${name} ${this._resolve(p).srcpath}`
   }
 
   // @returns `function` the helper function to handle paths and
