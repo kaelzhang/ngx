@@ -26,7 +26,7 @@ import {
 
 export async function parseOptions ({
   cwd,
-  env,
+  env: optionEnv,
   user,
   group
 }) {
@@ -35,10 +35,11 @@ export async function parseOptions ({
     src,
     dest,
     preset,
-    entry
+    entry,
+    env
   } = await new OptionManager({
     cwd,
-    env
+    env: optionEnv
   }).get()
 
   const data = await readYaml(preset)
@@ -55,6 +56,8 @@ export async function parseOptions ({
   if (user) {
     data.user = `${user} ${group}`
   }
+
+  data.env = env
 
   return {
     src,

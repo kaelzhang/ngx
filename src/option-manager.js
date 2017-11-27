@@ -16,7 +16,7 @@ module.exports = class OptionManager {
   }) {
 
     this.cwd = path.resolve(cwd)
-    this.env = env || process.env.NGX_ENV
+    this.env = env || process.env.NGX_ENV || DEFAULT_ENV
   }
 
   async _readNgxrc () {
@@ -113,7 +113,8 @@ module.exports = class OptionManager {
       // - src: foo
       // - entry: foo/nginx.conf
       // -> entry: nginx.conf
-      entry: relativeEntry
+      entry: relativeEntry,
+      env: this.env
     }
   }
 
@@ -137,7 +138,7 @@ module.exports = class OptionManager {
     }
 
     if (Object(preset) === preset) {
-      preset = preset[this.env || DEFAULT_ENV]
+      preset = preset[this.env]
 
       if (!preset) {
         throw new Error(`preset for env "${this.env}" is not defined in ".ngxrc"`)
