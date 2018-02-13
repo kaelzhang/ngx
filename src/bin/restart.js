@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import {
-  program,
   parse
 } from '../util/commander'
 

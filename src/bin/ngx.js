@@ -6,6 +6,7 @@ program
 .version(require('../../package.json').version)
 .usage('<cmd> [options]')
 .option('-v, --nginx-version', 'show nginx version')
+.command('build', 'build nginx config')
 .command('test', 'test nginx config')
 .command('reload', 'reload nginx server')
 .command('start', 'start nginx server')
