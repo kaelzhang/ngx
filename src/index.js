@@ -36,7 +36,8 @@ export async function parseOptions ({
     dest,
     preset,
     entry,
-    env
+    env,
+    map
   } = await new OptionManager({
     cwd,
     env: optionEnv
@@ -64,7 +65,8 @@ export async function parseOptions ({
     dest,
     data,
     preset,
-    entry
+    entry,
+    map
   }
 }
 

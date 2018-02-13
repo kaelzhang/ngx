@@ -22,6 +22,7 @@ export default class Compiler {
     dest,
     // `path` rc.src
     src,
+    map,
     // `Boolean` whether the file is rc.entry
     isEntry
   }) {
@@ -30,6 +31,7 @@ export default class Compiler {
     this.src = src
     this.dest = dest
     this.isEntry = isEntry
+    this.map = map
 
     this.file = file
     this.filepath = path.join(src, file)
@@ -93,7 +95,7 @@ export default class Compiler {
 
   // @returns `function` the helper function to handle paths
   _directive (name) {
-    return async p => `${name} ${this._resolve(p).srcpath}`
+    return async p => `${name} ${this.map(this._resolve(p).srcpath)}`
   }
 
   // @returns `function` the helper function to handle paths and
@@ -106,7 +108,7 @@ export default class Compiler {
 
       const dir = path.dirname(destpath)
       await fs.ensureDir(dir)
-      return `${name} ${destpath}`
+      return `${name} ${this.map(destpath)}`
     }
   }
 
@@ -167,12 +169,18 @@ export default class Compiler {
 
   async _includeOne (file) {
     const data = this._cleanData(this.data)
+    const {
+      dest,
+      src,
+      map
+    } = this
 
     const sub = new Compiler({
       data,
       file,
-      dest: this.dest,
-      src: this.src
+      dest,
+      src,
+      map
     })
     this.includes.push(sub)
 
@@ -181,7 +189,7 @@ export default class Compiler {
       destpath: compiledDest
     } = await sub.transform()
 
-    return `include ${compiledDest}`
+    return `include ${this.map(compiledDest)}`
   }
 
   async _includeMany (file) {

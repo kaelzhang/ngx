@@ -3,6 +3,9 @@ import path from 'path'
 import {
   readFile
 } from './util/file'
+import {
+  removeEnding
+} from 'pre-suf'
 
 const DEFAULT_ENV = 'production'
 
@@ -100,6 +103,11 @@ module.exports = class OptionManager {
       return Promise.reject(new Error('entry should inside directory `src`'))
     }
 
+    const volumes = this._parseVolumes()
+    const {
+      map
+    } = new Mapper(volumes)
+
     return {
       // `path` absolute path, the unbuilt source files
       src,
@@ -114,8 +122,23 @@ module.exports = class OptionManager {
       // - entry: foo/nginx.conf
       // -> entry: nginx.conf
       entry: relativeEntry,
-      env: this.env
+      env: this.env,
+      map
     }
+  }
+
+  _parseVolumes () {
+    const {volumes} = this._rc
+    if (!volumes) {
+      return {}
+    }
+
+    const real = Object.create(null)
+    Object.keys(volumes).forEach(from => {
+      real[this._resolveToBase(from)] = removeEnding(volumes[from], '/')
+    })
+
+    return real
   }
 
   // Resolve a key from rc
@@ -124,14 +147,19 @@ module.exports = class OptionManager {
     const rc = this._rc
 
     if (key in rc) {
-      return path.resolve(this._rcBase, rc[key])
+      return this._resolveToBase(rc[key])
     }
 
     throw new Error(`${key} is not defined`)
   }
 
+  _resolveToBase (filepath) {
+    const resolved = path.resolve(this._rcBase, filepath)
+    return removeEnding(resolved, '/')
+  }
+
   _presetFile () {
-    let preset = this._rc.preset
+    let {preset} = this._rc
 
     if (!preset) {
       throw new Error('preset is not defined')
@@ -146,5 +174,33 @@ module.exports = class OptionManager {
     }
 
     return path.resolve(this._rcBase, preset)
+  }
+}
+
+const justReturn = x => x
+
+class Mapper {
+  constructor (mapper) {
+    this._mapper = mapper
+    this._paths = Object.keys(mapper)
+
+    this.map = !this._paths.length
+      ? justReturn
+      : this.map.bind(this)
+  }
+
+  map (path) {
+    const index = this._paths.findIndex(from => {
+      if (path.indexOf(from) === 0) {
+        return true
+      }
+    })
+
+    if (!~index) {
+      return path
+    }
+
+    const from = this._paths[index]
+    return this._mapper[from] + path.slice(from.length)
   }
 }

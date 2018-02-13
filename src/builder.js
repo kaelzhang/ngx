@@ -13,7 +13,9 @@ export default async function build ({
   // @param {Object} the content of config.yaml
   data: config,
   // @param {path} entry the entry file of nginx, relative to src
-  entry
+  entry,
+  // @param {function(path)} map a filepath according to volumes
+  map
 }) {
 
   const absEntry = path.join(src, entry)
@@ -29,7 +31,8 @@ export default async function build ({
       src,
       dest,
       data,
-      file: entry
+      file: entry,
+      map
     })
 
     return await server.toString(compiler.directives.include)
@@ -52,6 +55,7 @@ export default async function build ({
     dest,
     data,
     file: entry,
+    map,
     isEntry: true
   }).transform()
 
